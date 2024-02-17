@@ -11,6 +11,10 @@ const userScehma = new mongoose.Schema({
   lastName: { type: String, required: true },
 });
 
+const taskSchema = new mongoose.Schema({
+  task: { required: true, type: String },
+});
+
 const user = mongoose.model("user", userScehma);
 
 module.exports = {
