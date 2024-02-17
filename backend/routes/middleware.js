@@ -18,7 +18,6 @@ const authMiddleware = (req, res, next) => {
   }
   const token = auth.split(" ")[1];
   const decoded = jwt.verify(token, JWT);
-  console.log(decoded);
   if (!decoded) {
     res.json(400).json({
       msg: "Invalid auth token",

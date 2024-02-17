@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { boolean } = require("zod");
 
 mongoose.connect(
   "mongodb+srv://admin:1234567890@cluster0.kr1umr2.mongodb.net/taskflow"
@@ -12,11 +13,17 @@ const userScehma = new mongoose.Schema({
 });
 
 const taskSchema = new mongoose.Schema({
-  task: { required: true, type: String },
+  id: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
+  desc: { required: true, type: String },
+  endTime: { type: Date, required: true },
+  done: { type: Boolean, default: false },
+  doubleCheck: { type: Boolean, default: false },
 });
 
 const user = mongoose.model("user", userScehma);
+const task = mongoose.model("task", taskSchema);
 
 module.exports = {
   user,
+  task,
 };
