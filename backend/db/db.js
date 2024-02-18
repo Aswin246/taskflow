@@ -15,7 +15,9 @@ const userScehma = new mongoose.Schema({
 const taskSchema = new mongoose.Schema({
   id: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
   desc: { required: true, type: String },
-  endTime: { type: Date, required: true },
+  endDate: { type: Date, required: true },
+  endHour: { type: Number, required: true },
+  endMinute: { type: Number, required: true },
   done: { type: Boolean, default: false },
   doubleCheck: { type: Boolean, default: false },
 });
