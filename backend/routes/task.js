@@ -139,20 +139,27 @@ router.get("/timeDifference", authMiddleware, async (req, res) => {
   try {
     const currentTask = await task.findById(taskId);
 
-    // Extract endDate, endHour, and endMinute from currentTask
     const { endDate, endHour, endMinute } = currentTask;
 
-    // Get current date in IST
     const currentDate = moment().tz("Asia/Kolkata");
 
-    // Extract current hour and minute
-    const currentHour = currentDate.hours();
-    const currentMinute = currentDate.minutes();
-    // Calculate time difference
-    const timeDifferenceHours = endHour - currentHour;
-    const timeDifferenceMinutes = endMinute - currentMinute;
+    if (
+      moment(endDate).isBefore(currentDate) ||
+      (moment(endDate).isSame(currentDate, "day") &&
+        (endHour < currentDate.hours() ||
+          (endHour === currentDate.hours() &&
+            endMinute <= currentDate.minutes())))
+    ) {
+      console.log("Task end time has passed");
+    } else {
+      console.log("Task end time is in the future");
+    }
+    const dateDifference = moment(endDate).diff(currentDate, "days");
+    const timeDifferenceHours = endHour - currentDate.hours();
+    const timeDifferenceMinutes = endMinute - currentDate.minutes();
 
     res.status(200).json({
+      dateDifference: dateDifference,
       timeDifferenceHours: timeDifferenceHours,
       timeDifferenceMinutes: timeDifferenceMinutes,
     });

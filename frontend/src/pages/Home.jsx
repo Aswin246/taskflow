@@ -9,7 +9,7 @@ const Home = () => {
       <div className="flex justify-center items-center h-screen">
         <div className="text-center">
           <Heading label="TaskFlow" />
-          <SubHeading label="Simplify Your Workflow with TaskFlow" />
+          <SubHeading label="Simplify Your Workflow with TaskFlow " />
         </div>
       </div>
     </>
