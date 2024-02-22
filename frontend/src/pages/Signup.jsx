@@ -2,14 +2,42 @@ import { useState } from "react";
 import { InputBox } from "../components/InputBox";
 import { Button } from "../components/Button";
 import { BottomLink } from "../components/BottomLink";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export const Signup = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
-  const signup = () => {};
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const signup = async () => {
+    try {
+      const response = await axios.post("http://localhost:3000/api/v1/signup", {
+        username: username.trim(),
+        password: password.trim(),
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+      });
+      const token = response.data.token;
+      localStorage.setItem("token", token);
+      setError("");
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Signup Error:", error);
+      if (
+        error &&
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setError(error.response.data.message);
+      } else {
+        setError("An internal server error occured. Please try again!");
+      }
+    }
+  };
 
   return (
     <>
@@ -47,6 +75,11 @@ export const Signup = () => {
             }}
           ></InputBox>
           <Button label={"Sign up"} onClick={signup} />
+          {error && (
+            <p className="text-black flex justify-center items-center">
+              {error}
+            </p>
+          )}
           <BottomLink
             to={"/signin"}
             label={"Already registered?"}
