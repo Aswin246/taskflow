@@ -20,6 +20,7 @@ export const Signup = () => {
         firstName: firstName.trim(),
         lastName: lastName.trim(),
       });
+      console.log("Signup Response:", response);
       const token = response.data.token;
       localStorage.setItem("token", token);
       setError("");
@@ -34,7 +35,7 @@ export const Signup = () => {
       ) {
         setError(error.response.data.message);
       } else {
-        setError("An internal server error occured. Please try again!");
+        setError("An error occured. Please try again!");
       }
     }
   };
