@@ -1,3 +1,5 @@
-const JWT = "1234567890";
+require("dotenv").config();
+
+const JWT = process.env.JWT;
 
 module.exports = JWT;
