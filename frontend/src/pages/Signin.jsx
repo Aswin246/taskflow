@@ -44,6 +44,7 @@ export const Signin = () => {
           </div>
 
           <InputBox
+            type={"text"}
             placeholder={"Enter email"}
             label={"Username"}
             onChange={(e) => {
@@ -51,6 +52,7 @@ export const Signin = () => {
             }}
           ></InputBox>
           <InputBox
+            type={"password"}
             placeholder={"Enter password"}
             label={"Password"}
             onChange={(e) => {

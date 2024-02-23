@@ -1,4 +1,4 @@
-export const InputBox = ({ placeholder, label, onChange }) => {
+export const InputBox = ({ placeholder, label, onChange, type }) => {
   return (
     <>
       <div className="p-1 tracking-wide font-thin font-mono text-white">
@@ -6,7 +6,7 @@ export const InputBox = ({ placeholder, label, onChange }) => {
       </div>
       <input
         className=" rounded-md p-2 tracking-tight font-mono text-black "
-        type="text"
+        type={type}
         placeholder={placeholder}
         onChange={onChange}
       ></input>

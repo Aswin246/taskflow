@@ -48,6 +48,7 @@ export const Signup = () => {
             Sign up
           </div>
           <InputBox
+            type={"text"}
             placeholder={"Enter first name"}
             label={"First name"}
             onChange={(e) => {
@@ -55,6 +56,7 @@ export const Signup = () => {
             }}
           ></InputBox>
           <InputBox
+            type={"text"}
             placeholder={"Enter last name"}
             label={"Last name"}
             onChange={(e) => {
@@ -62,6 +64,7 @@ export const Signup = () => {
             }}
           ></InputBox>
           <InputBox
+            type={"text"}
             placeholder={"Enter email"}
             label={"Username"}
             onChange={(e) => {
@@ -69,6 +72,7 @@ export const Signup = () => {
             }}
           ></InputBox>
           <InputBox
+            type={"password"}
             placeholder={"Enter password"}
             label={"Password"}
             onChange={(e) => {
