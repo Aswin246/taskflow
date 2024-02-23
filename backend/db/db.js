@@ -1,9 +1,7 @@
 const mongoose = require("mongoose");
-const { boolean } = require("zod");
-
-mongoose.connect(
-  "mongodb+srv://admin:1234567890@cluster0.kr1umr2.mongodb.net/taskflow"
-);
+require("dotenv").config();
+const mongodbUrl = process.env.MONGODB_URL;
+mongoose.connect(mongodbUrl);
 
 const userScehma = new mongoose.Schema({
   username: { type: String, unique: true, required: true },

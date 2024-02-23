@@ -5,6 +5,7 @@ const cors = require("cors");
 const token = require("../config");
 const router = express.Router();
 const { user } = require("../db/db");
+const bcrypt = require("bcrypt");
 
 const signupSchema = zod.object({
   username: zod.string(),
@@ -38,10 +39,10 @@ router.post("/", async (req, res) => {
     });
     return;
   }
-
+  const hashedPassword = await bcrypt.hash(body.password, 10);
   const createUser = await user.create({
     username: body.username,
-    password: body.password,
+    password: hashedPassword,
     firstName: body.firstName,
     lastName: body.lastName,
   });

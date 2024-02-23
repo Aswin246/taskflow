@@ -6,6 +6,7 @@ const { user } = require("../db/db");
 const jwt = require("jsonwebtoken");
 const JWT = require("../config");
 const authMiddleware = require("./middleware");
+const bcrypt = require("bcrypt");
 
 const app = express();
 app.use(cors());
@@ -17,45 +18,43 @@ const signInSchema = zod.object({
 });
 
 router.post("/", async (req, res) => {
-  const body = req.body;
-  const success = signInSchema.safeParse(body);
+  try {
+    const body = req.body;
+    const success = signInSchema.safeParse(body);
 
-  if (!success.success) {
-    res.status(400).json({
-      msg: "Invalis inputs",
-    });
-    return;
-  }
+    if (!success.success) {
+      res.status(411).json({
+        msg: "Invalis inputs",
+      });
+    }
 
-  const username = body.username;
-  const password = body.password;
-  const findUser = await user.findOne({
-    username,
-  });
-  if (!findUser) {
-    res.status(400).json({
-      msg: "User doesn't exists",
+    const username = body.username;
+    const password = body.password;
+    const findUser = await user.findOne({
+      username,
     });
-    return;
-  }
-  const verifyPassword = await user.findOne({
-    username: username,
-    password: password,
-  });
-  if (!verifyPassword) {
+
+    if (!findUser) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+    const isPasswordValid = await bcrypt.compare(password, findUser.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ msg: "Invalid password" });
+    }
+
+    const id = findUser._id;
+    const token = jwt.sign({ id }, JWT);
+
     res.status(200).json({
-      msg: "Incorrect password",
+      msg: "Sign in successfull",
+      token: token,
     });
     return;
+  } catch (error) {
+    res.status(411).json({
+      msg: "Error while logging in",
+    });
   }
-  const id = findUser._id;
-  const token = jwt.sign({ id }, JWT);
-
-  res.status(200).json({
-    msg: "Sign in successfull",
-    token: token,
-  });
 });
-
 
 module.exports = router;

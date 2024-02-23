@@ -2,12 +2,38 @@ import { useState } from "react";
 import { InputBox } from "../components/InputBox";
 import { Button } from "../components/Button";
 import { BottomLink } from "../components/BottomLink";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export const Signin = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
-  const signin = () => {};
+  const [error, setError] = useState("");
+  const Navigate = useNavigate();
+  const signin = async () => {
+    try {
+      const trimmedUsername = username.trim();
+      const trimmedPassword = password.trim();
+      const response = await axios.post("http://localhost:3000/api/v1/signin", {
+        username: trimmedUsername,
+        password: trimmedPassword,
+      });
+      setError("");
+      localStorage.setItem("token", response.data.token);
+      Navigate("/dashboard");
+    } catch (error) {
+      if (
+        error &&
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setError(error.response.data.message);
+      } else {
+        setError("An error occured. Please try again!");
+      }
+    }
+  };
 
   return (
     <>
@@ -18,6 +44,7 @@ export const Signin = () => {
           </div>
 
           <InputBox
+            type={"text"}
             placeholder={"Enter email"}
             label={"Username"}
             onChange={(e) => {
@@ -25,6 +52,7 @@ export const Signin = () => {
             }}
           ></InputBox>
           <InputBox
+            type={"password"}
             placeholder={"Enter password"}
             label={"Password"}
             onChange={(e) => {
@@ -32,6 +60,7 @@ export const Signin = () => {
             }}
           ></InputBox>
           <Button label={"Sign in"} onClick={signin} />
+          {error && <p>{error}</p>}
           <BottomLink
             to={"/signup"}
             label={"Dont have an account?"}
