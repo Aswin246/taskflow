@@ -10,43 +10,37 @@ app.use(cors());
 
 const router = express.Router();
 
-const taskSchema = zod.object({
-  desc: zod.string(),
-});
-
 router.post("/add", authMiddleware, async (req, res) => {
-  const body = req.body;
-  const success = taskSchema.safeParse(body);
+  try {
+    const body = req.body;
+    const desc = body.desc;
+    const endDate = body.endDate;
+    const endHour = body.endHour;
+    const endMinute = body.endMinute;
 
-  if (!success.success) {
-    console.log(success.error);
-    res.status(400).json({
-      msg: "Invalid inputs",
+    const existingTask = await task.findOne({ desc: desc });
+    if (existingTask) {
+      return res.status(400).json({
+        msg: "Task already exists",
+      });
+    }
+
+    await task.create({
+      desc: desc,
+      endDate: endDate,
+      endHour: endHour,
+      endMinute: endMinute,
     });
-    return;
-  }
 
-  const desc = body.desc;
-  const endDate = body.endDate;
-  const endHour = body.endHour;
-  const endMinute = body.endMinute;
-  const findTask = await task.findOne({
-    desc: desc,
-  });
-
-  if (findTask) {
-    res.status(400).json({
-      msg: "Task already exists",
+    return res.status(201).json({
+      msg: "Task added successfully",
     });
-    return;
+  } catch (error) {
+    console.error("Error adding task:", error);
+    return res.status(500).json({
+      msg: "Internal server error",
+    });
   }
-
-  await task.create({
-    desc: desc,
-    endDate: endDate,
-    endHour: endHour,
-    endMinute: endMinute,
-  });
 });
 
 router.post("/done", authMiddleware, async (req, res) => {

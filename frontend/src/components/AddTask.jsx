@@ -1,14 +1,16 @@
 import { Button } from "./Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { InputBox } from "./InputBox";
+import axios from "axios";
 
-function TaskPopup({ onClose, onSave }) {
+function TaskPopup({ onClose }) {
   const [description, setDescription] = useState("");
   const [hour, setHour] = useState("");
   const [minute, setMinute] = useState("");
   const [date, setDate] = useState("");
+  const [error, setError] = useState("");
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (description.trim() === "") {
       alert("Please enter a description.");
       return;
@@ -30,11 +32,32 @@ function TaskPopup({ onClose, onSave }) {
       alert("Please enter a valid date.");
       return;
     }
-
-    onSave({ description, hour, minute, date });
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/v1/task/add",
+        {
+          desc: description,
+          endDate: date,
+          endHour: hour,
+          endMinute: minute,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      console.log(response.data.message);
+    } catch (error) {
+      if (error.response) {
+        setError(error.response.data.message);
+      }
+    }
     setDescription("");
     setMinute(""), setHour(""), setDate("");
-    onClose();
+    if (!error) {
+      onClose();
+    }
   };
   const isValidHour = (value) => {
     return value >= 0 && value <= 23;
@@ -113,6 +136,7 @@ function TaskPopup({ onClose, onSave }) {
             label={"Close"}
           />
         </div>
+        {error && <p>{error}</p>}
       </div>
     </div>
   );
@@ -129,9 +153,6 @@ export const AddTask = () => {
     setPopup(false);
   };
 
-  const saveTask = (task) => {
-    console.log(task);
-  };
   return (
     <>
       <div className="flex flex-row justify-center mt-4">
@@ -142,7 +163,7 @@ export const AddTask = () => {
         />
       </div>
 
-      {popup && <TaskPopup onSave={saveTask} onClose={cancelAddtask} />}
+      {popup && <TaskPopup onClose={cancelAddtask} />}
     </>
   );
 };
