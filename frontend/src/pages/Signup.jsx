@@ -79,7 +79,13 @@ export const Signup = () => {
               setPassword(e.target.value);
             }}
           ></InputBox>
-          <Button label={"Sign up"} onClick={signup} />
+          <Button
+            className={
+              "bg-blue-500 hover:bg-blue-700 text-white  rounded-md px-3 py-1 mt-3 mx-2   "
+            }
+            label={"Sign up"}
+            onClick={signup}
+          />
           {error && (
             <p className="text-black flex justify-center items-center">
               {error}
