@@ -1,7 +1,8 @@
 import { Button } from "./Button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { InputBox } from "./InputBox";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 function TaskPopup({ onClose }) {
   const [description, setDescription] = useState("");
@@ -33,9 +34,15 @@ function TaskPopup({ onClose }) {
       return;
     }
     try {
+      const tokenFromLocalStorage = localStorage.getItem("token");
+      const decoded = jwtDecode(tokenFromLocalStorage, { header: true });
+
+      const userId = decoded.id;
+
       const response = await axios.post(
         "http://localhost:3000/api/v1/task/add",
         {
+          //id: userId,
           desc: description,
           endDate: date,
           endHour: hour,
@@ -43,11 +50,10 @@ function TaskPopup({ onClose }) {
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${tokenFromLocalStorage}`,
           },
         }
       );
-      console.log(response.data.message);
     } catch (error) {
       if (error.response) {
         setError(error.response.data.message);

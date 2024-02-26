@@ -11,7 +11,7 @@ const userScehma = new mongoose.Schema({
 });
 
 const taskSchema = new mongoose.Schema({
-  id: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
+  id: { type: mongoose.Schema.Types.ObjectId, ref: "user", required: true },
   desc: { required: true, type: String },
   endDate: { type: Date, required: true },
   endHour: { type: Number, required: true },
