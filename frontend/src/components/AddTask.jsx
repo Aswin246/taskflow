@@ -4,7 +4,7 @@ import { InputBox } from "./InputBox";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
-function TaskPopup({ onClose }) {
+export function TaskPopup({ onClose }) {
   const [description, setDescription] = useState("");
   const [hour, setHour] = useState("");
   const [minute, setMinute] = useState("");
@@ -92,7 +92,7 @@ function TaskPopup({ onClose }) {
           </div>
           <div className="flex justify-center">
             <input
-              type="number"
+              type="text"
               placeholder="Enter hour"
               onChange={(e) => {
                 const value = parseInt(e.target.value);
@@ -103,10 +103,10 @@ function TaskPopup({ onClose }) {
               min={0}
               max={23}
               className="rounded-md p-2 tracking-tight font-mono text-black  mx-2 w-full"
-              onKeyDown={handleKeyDown}
+              //onKeyDown={handleKeyDown}
             />
             <input
-              type="number"
+              type="text"
               placeholder="Enter minute"
               onChange={(e) => {
                 const value = parseInt(e.target.value);
@@ -117,7 +117,7 @@ function TaskPopup({ onClose }) {
               min={0}
               max={59}
               className="rounded-md p-2 tracking-tight font-mono text-black w-full"
-              onKeyDown={handleKeyDown}
+              //onKeyDown={handleKeyDown}
             />
           </div>
         </div>
@@ -163,7 +163,7 @@ export const AddTask = () => {
     <>
       <div className="flex flex-row justify-center mt-4">
         <Button
-          className="bg-blue-500 hover:bg-blue-700 text-white rounded-md px-3 py-1 w-40"
+          className="bg-blue-500 hover:bg-blue-700 text-white rounded-md px-3 py-1 w-40 h-10"
           onClick={handleAddTask}
           label={"Create task"}
         />

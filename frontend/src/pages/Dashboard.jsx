@@ -4,10 +4,10 @@ import { TaskContainer } from "../components/TaskContainer";
 
 export const Dashboard = () => {
   return (
-    <div className="bg-black h-screen ">
+    <div className="bg-black  ">
       <AppBar />
       <AddTask />
-      <TaskContainer/>
+      <TaskContainer />
     </div>
   );
 };
