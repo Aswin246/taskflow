@@ -13,13 +13,24 @@ export const TaskContainer = () => {
         const decodedToken = jwtDecode(token);
         const userId = decodedToken.id;
 
-        const response = await axios.get(`/api/v1/task/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(
+          `http://localhost:3000/api/v1/task/${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-        setTasks(response.data);
+        // Log response data to inspect structure and contents
+        console.log("Response data:", response.data);
+
+        // Ensure response.data is an array before setting tasks
+        if (Array.isArray(response.data)) {
+          setTasks(response.data); // Accessing the array of tasks within response.data
+        } else {
+          setTasks([]); // Initialize tasks as an empty array if no tasks found
+        }
       } catch (error) {
         console.error("Error fetching tasks:", error);
         setError("Error fetching tasks");
