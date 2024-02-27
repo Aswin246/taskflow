@@ -49,7 +49,7 @@ export const AppBar = () => {
   }, []);
 
   return (
-    <div className="text-white bg-teal-600 flex flex-row rounded-lg p-4 mx-5 tracking-widest font-mono text-xl justify-between">
+    <div className="text-white bg-teal-600 flex flex-row rounded-lg p-4 mx-5 tracking-widest font-mono text-xl justify-between ">
       <div> Welcome {firstName} !</div>
       <div> {currentTime} </div>
     </div>

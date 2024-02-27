@@ -1,6 +1,6 @@
 const express = require("express");
 const zod = require("zod");
-const { task } = require("../db/db");
+const { task, user } = require("../db/db");
 const authMiddleware = require("./middleware");
 const cors = require("cors");
 const moment = require("moment-timezone");
@@ -12,6 +12,7 @@ const router = express.Router();
 
 router.post("/add", authMiddleware, async (req, res) => {
   try {
+    const userId = req.id;
     const body = req.body;
     const desc = body.desc;
     const endDate = body.endDate;
@@ -26,6 +27,7 @@ router.post("/add", authMiddleware, async (req, res) => {
     }
 
     await task.create({
+      id: userId,
       desc: desc,
       endDate: endDate,
       endHour: endHour,
@@ -124,6 +126,23 @@ router.post("/update", authMiddleware, async (req, res) => {
     res.status(200).json({
       msg: "Internal server error",
     });
+  }
+});
+
+router.get("/:userId", async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    const tasks = await task.find({ id: userId });
+
+    if (tasks.length === 0) {
+      return res.status(404).json({ msg: "No tasks found for the user" });
+    }
+
+    res.status(200).json([tasks]);
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
+    res.status(500).json({ msg: "Internal server error" });
   }
 });
 
