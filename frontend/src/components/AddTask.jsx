@@ -3,8 +3,9 @@ import { useState } from "react";
 import { InputBox } from "./InputBox";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import { fetchTasks, TaskContainer } from "./TaskContainer";
 
-export function TaskPopup({ onClose }) {
+export function TaskPopup({ onClose, setTasks }) {
   const [description, setDescription] = useState("");
   const [hour, setHour] = useState("");
   const [minute, setMinute] = useState("");
@@ -25,7 +26,7 @@ export function TaskPopup({ onClose }) {
       minute < 0 ||
       minute > 59
     ) {
-      alert("Please enter valid hours (0-23) and seconds (0-59).");
+      alert("Please enter valid hours (0-23) and minutes (0-59).");
       return;
     }
 
@@ -54,11 +55,14 @@ export function TaskPopup({ onClose }) {
           },
         }
       );
+      await fetchTasks(); // Fetch the updated tasks
+      setTasks(newTasks);
     } catch (error) {
       if (error.response) {
         setError(error.response.data.message);
       }
     }
+
     setDescription("");
     setMinute(""), setHour(""), setDate("");
     if (!error) {
@@ -148,7 +152,7 @@ export function TaskPopup({ onClose }) {
   );
 }
 
-export const AddTask = () => {
+export const AddTask = ({ setTasks }) => {
   const [popup, setPopup] = useState(false);
 
   const handleAddTask = () => {
@@ -169,7 +173,7 @@ export const AddTask = () => {
         />
       </div>
 
-      {popup && <TaskPopup onClose={cancelAddtask} />}
+      {popup && <TaskPopup onClose={cancelAddtask} setTasks={setTasks} />}
     </>
   );
 };
