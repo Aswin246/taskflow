@@ -5,13 +5,13 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { fetchTasks, TaskContainer } from "./TaskContainer";
 
-export function TaskPopup({ onClose, setTasks }) {
+export function TaskPopup({ onClose, onTaskAddedOrUpdate }) {
   const [description, setDescription] = useState("");
   const [hour, setHour] = useState("");
   const [minute, setMinute] = useState("");
   const [date, setDate] = useState("");
   const [error, setError] = useState("");
-
+  let updated = false;
   const handleSave = async () => {
     if (description.trim() === "") {
       alert("Please enter a description.");
@@ -55,8 +55,7 @@ export function TaskPopup({ onClose, setTasks }) {
           },
         }
       );
-      await fetchTasks(); // Fetch the updated tasks
-      setTasks(newTasks);
+      onTaskAddedOrUpdate();
     } catch (error) {
       if (error.response) {
         setError(error.response.data.message);
@@ -152,8 +151,9 @@ export function TaskPopup({ onClose, setTasks }) {
   );
 }
 
-export const AddTask = ({ setTasks }) => {
+export const AddTask = () => {
   const [popup, setPopup] = useState(false);
+  const [updated, setUpdated] = useState(true);
 
   const handleAddTask = () => {
     setPopup(true);
@@ -173,7 +173,9 @@ export const AddTask = ({ setTasks }) => {
         />
       </div>
 
-      {popup && <TaskPopup onClose={cancelAddtask} setTasks={setTasks} />}
+      {popup && (
+        <TaskPopup onClose={cancelAddtask} onTaskAddedOrUpdate={setUpdated} />
+      )}
     </>
   );
 };

@@ -3,6 +3,7 @@ import { jwtDecode } from "jwt-decode";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { TaskPopup } from "./AddTask";
 
 export const fetchTasks = async () => {
   try {
@@ -46,7 +47,7 @@ export const fetchTasks = async () => {
   }
 };
 
-export const TaskContainer = () => {
+export const TaskContainer = ({ updated }) => {
   const [tasks, setTasks] = useState([]);
   const [error, setError] = useState("");
 
@@ -60,7 +61,7 @@ export const TaskContainer = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [updated]);
 
   // const refreshTasks = async () => {
   //   try {
