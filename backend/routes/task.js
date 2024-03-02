@@ -115,27 +115,23 @@ router.post("/doublecheck", authMiddleware, async (req, res) => {
 
 router.post("/update", authMiddleware, async (req, res) => {
   const body = req.body;
-  const success = taskSchema.safeParse(body);
+  const desc = body.desc;
+  const endDate = body.endDate;
+  const endHour = body.endHour;
+  const endMinute = body.endMinute;
 
-  if (!success.success) {
-    console.log(success.error);
-    res.status(400).json({
-      msg: "Invalid inputs",
-    });
-    return;
-  }
   try {
-    const taskId = body.taskId;
+    const taskId = body._id;
 
     await task.updateOne(
       {
         _id: taskId,
       },
       {
-        desc: body.desc,
-        endDate: body.endDate,
-        endHour: body.endHour,
-        endMinute: body.endMinute,
+        desc: desc,
+        endDate: endDate,
+        endHour: endHour,
+        endMinute: endMinute,
       }
     );
     res.status(200).json({
