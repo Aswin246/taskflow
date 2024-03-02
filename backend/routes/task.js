@@ -10,6 +10,9 @@ app.use(cors());
 
 const router = express.Router();
 
+const HourSchema = zod.number().int().min(0).max(23);
+const MinuteSchema = zod.number().int().min(0).max(59);
+
 router.post("/add", authMiddleware, async (req, res) => {
   try {
     const userId = req.id;
@@ -18,6 +21,23 @@ router.post("/add", authMiddleware, async (req, res) => {
     const endDate = body.endDate;
     const endHour = body.endHour;
     const endMinute = body.endMinute;
+
+    const hourSuccess = HourSchema.safeParse(endHour);
+
+    if (!hourSuccess.success) {
+      res.status(400).json({
+        msg: "Invalid hour entry",
+      });
+      return;
+    }
+
+    const minuteSuccess = MinuteSchema.safeParse(endMinute);
+
+    if (!minuteSuccess.success) {
+      res.status(400).json({
+        msg: "Invalid minute entry",
+      });
+    }
 
     const existingTask = await task.findOne({ desc: desc });
     if (existingTask) {
